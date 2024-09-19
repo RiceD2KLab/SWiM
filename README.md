@@ -30,5 +30,7 @@ To do
 ### Construct Dataset
 
 1. Download the `PoseBowl Object Detection` dataset from [Kaggle](https://www.kaggle.com/datasets/aparajuli/posebowl/) to the `/data` folder as `/data/posebowl_objdet`.
-2. 
-3. 
+2. Run the python script: `generate_dataset.py`
+    ```sh
+    python preprocess_data/generate_dataset.py --split "[train/test/val]"
+    ```
