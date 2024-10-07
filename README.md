@@ -4,7 +4,7 @@
 To do
 
 ## Software dependencies
-- Python3.11
+[![Python 3.11+](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-311/)
 
 ## Setup
 
@@ -26,11 +26,3 @@ To do
     pip install -r requirements.txt
     ```
 
-## Dataset
-### Construct Dataset
-
-1. Download the `PoseBowl Object Detection` dataset from [Kaggle](https://www.kaggle.com/datasets/aparajuli/posebowl/) to the `/data` folder as `/data/posebowl_objdet`.
-2. Run the python script: `generate_dataset.py`
-    ```sh
-    python preprocess_data/generate_dataset.py --split "[train/test/val]"
-    ```
