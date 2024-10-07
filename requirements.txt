@@ -8,4 +8,5 @@ torch==2.4.1
 torchvision==0.19.1
 pybboxes==0.1.6
 ultralytics==8.2.93
+transformers==4.45.1
 loguru==0.4.6
