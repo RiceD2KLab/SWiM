@@ -25,6 +25,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+untracked/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -106,7 +107,8 @@ venv.bak/
 
 # Dataset
 /data/*/
-
+/data/*zip
+/data/*gz
 /models/*.pt
 
 # mkdocs documentation
