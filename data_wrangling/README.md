@@ -6,6 +6,7 @@ This directory contains scripts and tools for preprocessing data for the NASA Se
 
 - `generate_posebowl_masks.py`: Script for generating segmentation masks for the spacecrafts in Posebowl_ObjDet dataset using Meta's SAM2.
 - `binary_masks_to_yolo_polys.py`: Script for converting binary segmentation masks to yolo-polygon coordinates.
+- `resize_and_merge_classes_spacecrafts.py`: Script for resizing the images and masks to (1280, 1024) using Lanczos interpolation. It also merges the classes in the masks into one.
 - `create_yaml.py`: Script for generating the yaml file required to train ultralytics models.
 
 ## Usage
@@ -36,7 +37,13 @@ This directory contains scripts and tools for preprocessing data for the NASA Se
     python binary_masks_to_yolo_polys.py --source_dir posebowl_segmented --dest_dir posebowl_segmented
     ```
 
-3. **Create YAML**: Run `create_yaml.py` to generate the YAML file necessary for training ultralytics models.
+3. **Resize Spacecrafts images + masks and Merge classes**: Run `resize_and_merge_classes_spacecrafts.py` to resize the images and masks to the same size as posebowl dataset. It also merges the classes of the masks into one.
+    
+    This script expects the spacecrafts data dir name in the `/data/` dir.
+    ```sh
+    python resize_and_merge_classes_spacecrafts.py --dir_name spacecrafts
+    ```
+4. **Create YAML**: Run `create_yaml.py` to generate the YAML file necessary for training ultralytics models.
 
     This script expects the `data_dir` to have `images/` and `labels/` subdirectories.
     ```sh

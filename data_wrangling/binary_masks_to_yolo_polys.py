@@ -56,6 +56,9 @@ def main(source_dir: str, dest_dir: str) -> None:
     logger.debug(f"Destination directory: {labels_dir.resolve()}")
 
     for split in ["train", "test", "val"]:
+        if not os.path.exists(masks_dir / split):
+            logger.error(f"{split} masks directory does not exist.")
+            continue
         os.makedirs(labels_dir / split, exist_ok=True)
         data_points = os.listdir(masks_dir / split)
 
