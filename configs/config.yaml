@@ -1,0 +1,17 @@
+model:
+  name: "yolov8n-seg.pt"
+dataset:
+  dir_name: "dataset-v1"
+  img_size: 1024
+training:
+  name: "sanity-run"
+  epochs: 2
+  exist_ok: True # Overwrite the existing runs directory
+  batch_size: 0.7 # 70% of the available GPU memory [Auto-mode with Utilization Fraction]
+  learning_rate: 0.001
+  device: [0]
+  amp: True # Automatic Mixed Precision
+  freeze: None
+  fraction: 0.3
+  plots: True
+  resume: False

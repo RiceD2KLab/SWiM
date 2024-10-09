@@ -124,6 +124,7 @@ dmypy.json
 
 # VSCode
 .vscode/
+runs/
 
 # VSCode extensions
 .vscode-test/

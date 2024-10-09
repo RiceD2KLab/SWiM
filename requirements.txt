@@ -6,6 +6,7 @@ pillow==10.4.0
 matplotlib==3.7.2
 torch==2.4.1
 torchvision==0.19.1
+ml-collections==0.1.1
 pybboxes==0.1.6
 ultralytics==8.2.93
 transformers==4.45.1
