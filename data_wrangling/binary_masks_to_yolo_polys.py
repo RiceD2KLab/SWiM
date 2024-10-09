@@ -40,6 +40,9 @@ def binary_mask_to_yolo_poly(mask_path: str) -> Tuple[str]:
 
     polygons = []
     for cnt in contours:
+        # Skip small contours
+        if len(cnt) < 3:
+            continue
         cnt = cnt.squeeze() / size
         cnt = cnt.flatten().tolist()
         polygons.append(" ".join(map(str, cnt)))
