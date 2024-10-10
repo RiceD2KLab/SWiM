@@ -39,7 +39,7 @@ def train(cfg: ConfigDict) -> None:
         model=MODELS_DIR / cfg.model.name,
     )
     model.train(
-        data=DATA_DIR / cfg.dataset.dir_name / "data.yaml",
+        data=os.path.join(cfg.dataset.path, "data.yaml"),
         epochs=cfg.training.epochs,
         batch=cfg.training.batch_size,
         device=cfg.training.device,

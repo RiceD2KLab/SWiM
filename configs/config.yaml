@@ -1,7 +1,7 @@
 model:
   name: "yolov8n-seg.pt"
 dataset:
-  dir_name: "dataset-v1"
+  path: "/scratch/dsci435/nasa_seg/datasets/dataset-v2"
   img_size: 1024
 training:
   name: "sanity-run"
