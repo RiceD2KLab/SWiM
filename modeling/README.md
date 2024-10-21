@@ -1,7 +1,7 @@
 
 # Modeling
 
-This directory contains scripts and tools for training and utilizing the segmentation models for the NASA Segmentation F24 project.
+This directory contains scripts for training and utilizing the segmentation models for the NASA Segmentation F24 project.
 
 ## Contents
 
