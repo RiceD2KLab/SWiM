@@ -51,7 +51,7 @@ python script_name.py --model best.onnx --input input_image.png --output output_
 ```
 
 ## Directory Structure
-
+ ```sh
 /segmentation_project/
 ├── data_wrangling/
 │   ├── generate_posebowl_masks.py
@@ -71,7 +71,7 @@ python script_name.py --model best.onnx --input input_image.png --output output_
 ├── requirements.txt
 ├── LICENSE
 └── README.md (this file)
-
+ ```
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
