@@ -41,6 +41,15 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
     ```sh
     pip install -r requirements.txt
     ```
+
+## Usage
+To use onnx_pipeline.py, run the following command:
+
+```sh
+python script_name.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
+
+```
+
 ## Directory Structure
 
 /segmentation_project/
@@ -68,11 +77,5 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
 This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 
-## Usage
-To use onnx_pipeline.py, run the following command:
 
-```sh
-python script_name.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
-
-```
 
