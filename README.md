@@ -42,16 +42,12 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
     pip install -r requirements.txt
     ```
 ## Directory Structure
-
+ ```sh
 /segmentation_project/
 ├── data_wrangling/
-
 │   ├── generate_posebowl_masks.py
-
 │   ├── binary_masks_to_yolo_polys.py
-
 │   ├── resize_and_merge_classes_spacecrafts.py
-
 │   ├── create_yaml.py
 │
 ├── modeling/
@@ -66,7 +62,7 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
 ├── requirements.txt
 ├── LICENSE
 └── README.md (this file)
-
+ ```
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
