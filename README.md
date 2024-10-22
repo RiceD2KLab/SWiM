@@ -26,3 +26,11 @@ To do
     pip install -r requirements.txt
     ```
 
+## Usage
+To use onnx_pipeline.py, run the following command:
+
+```sh
+python script_name.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
+
+```
+

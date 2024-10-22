@@ -2,8 +2,9 @@ import cv2
 import numpy as np
 import onnxruntime as ort
 import time
+import argparse
 
-# Color class for visualization
+# Color class for visualization (hex colors converted to RGB)
 class Colors:
     def __init__(self):
         hexs = ('FF3838', 'FF9D97', 'FF701F', 'FFB21D', 'CFD231', '48F90A', '92CC17', '3DDB86', '1A9334', '00D4BB',
@@ -19,22 +20,25 @@ class Colors:
     def hex2rgb(h):
         return tuple(int(h[1 + i:1 + i + 2], 16) for i in (0, 2, 4))
 
-# YOLOv8 Segmentation class
+# YOLOv8 Segmentation class that handles inference and visualization
 class YOLOv8Seg:
     def __init__(self, onnx_model):
+        # Load the ONNX model
         self.session = ort.InferenceSession(onnx_model)
         self.ndtype = np.float32 if self.session.get_inputs()[0].type == 'tensor(float)' else np.float16
         self.model_height, self.model_width = [x.shape for x in self.session.get_inputs()][0][-2:]
         self.color_palette = Colors()
 
+    # Perform inference and return boxes, segments, and masks
     def __call__(self, im0, conf_threshold=0.4, iou_threshold=0.45, nm=32):
         im, ratio, (pad_w, pad_h) = self.preprocess(im0)
         preds = self.session.run(None, {self.session.get_inputs()[0].name: im})
-        print(len(preds))
+        print(len(preds))  # Debugging: print number of predictions
         boxes, segments, masks = self.postprocess(preds, im0=im0, ratio=ratio, pad_w=pad_w, pad_h=pad_h,
                                                   conf_threshold=conf_threshold, iou_threshold=iou_threshold, nm=nm)
         return boxes, segments, masks
 
+    # Preprocess the input image (resize and normalize)
     def preprocess(self, img):
         shape = img.shape[:2]
         new_shape = (self.model_height, self.model_width)
@@ -51,9 +55,10 @@ class YOLOv8Seg:
         img_process = img[None] if len(img.shape) == 3 else img
         return img_process, ratio, (pad_w, pad_h)
 
+    # Postprocess the model predictions: filter boxes, generate masks and segments
     def postprocess(self, preds, im0, ratio, pad_w, pad_h, conf_threshold, iou_threshold, nm=32):
         x, protos = preds[0], preds[1]
-        print(x.shape, protos.shape)
+        print(x.shape, protos.shape)  # Debugging: print shapes of predictions
         x = np.einsum('bcn->bnc', x)
         x = x[np.amax(x[..., 4:-nm], axis=-1) > conf_threshold]
         x = np.c_[x[..., :4], np.amax(x[..., 4:-nm], axis=-1), np.argmax(x[..., 4:-nm], axis=-1), x[..., -nm:]]
@@ -71,6 +76,7 @@ class YOLOv8Seg:
         else:
             return [], [], []
 
+    # Process masks based on bounding boxes and resize them to fit the original image
     def process_mask(self, protos, masks_in, bboxes, im0_shape):
         c, mh, mw = protos.shape
         masks = np.matmul(masks_in, protos.reshape((c, -1))).reshape((-1, mh, mw)).transpose(1, 2, 0)
@@ -80,6 +86,7 @@ class YOLOv8Seg:
         masks = self.crop_mask(masks, bboxes)
         return np.greater(masks, 0.5)
 
+    # Scale the masks to match the size of the original image
     def scale_mask(self, masks, im0_shape, ratio_pad=None):
         im1_shape = masks.shape[:2]
         if ratio_pad is None:
@@ -95,6 +102,7 @@ class YOLOv8Seg:
             masks = masks[:, :, None]
         return masks
 
+    # Crop the mask to match the bounding boxes
     def crop_mask(self, masks, boxes):
         n, h, w = masks.shape
         x1, y1, x2, y2 = np.split(boxes[:, :, None], 4, 1)
@@ -102,6 +110,7 @@ class YOLOv8Seg:
         c = np.arange(h, dtype=x1.dtype)[None, :, None]
         return masks * ((r >= x1) * (r < x2) * (c >= y1) * (c < y2))
 
+    # Convert the masks to contour segments
     def masks2segments(self, masks):
         segments = []
         for mask in masks.astype(np.uint8):
@@ -113,6 +122,7 @@ class YOLOv8Seg:
             segments.append(c.astype('float32'))
         return segments
 
+    # Draw bounding boxes and segmentation masks on the image
     def draw_and_visualize(self, im, bboxes, segments, vis=True, save=False):
         im_canvas = im.copy()
         for (*box, conf, cls_), segment in zip(bboxes, segments):
@@ -126,12 +136,20 @@ class YOLOv8Seg:
         return im
 
 if __name__ == '__main__':
+    # Argument parsing for command-line options
+    parser = argparse.ArgumentParser(description='YOLOv8 Segmentation ONNX Inference')
+    parser.add_argument('--model', type=str, default='best.onnx', help='Path to the ONNX model file')
+    parser.add_argument('--input', type=str, required=True, help='Path to the input image file')
+    parser.add_argument('--output', type=str, default='output_segmented_image.jpg', help='Path to save the output image')
+    args = parser.parse_args()
+
     start_time = time.time()
-    model_path = "best.onnx"
-    model = YOLOv8Seg(model_path)
+
+    # Initialize the model
+    model = YOLOv8Seg(args.model)
 
     # Load input image
-    img = cv2.imread('input.png')
+    img = cv2.imread(args.input)
 
     # Run inference
     boxes, segments, _ = model(img, conf_threshold=0.4, iou_threshold=0.45)
@@ -143,6 +161,8 @@ if __name__ == '__main__':
         output_image = img
 
     # Save and display result
-    cv2.imwrite('output_segmented_image.jpg', output_image)
+    cv2.imwrite(args.output, output_image)
+
     end_time = time.time()
     print(f"Inference time: {end_time - start_time:.2f} seconds")
+    print(f"Output image saved to: {args.output}")
