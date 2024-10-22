@@ -10,3 +10,5 @@ pybboxes==0.1.6
 ultralytics==8.2.93
 transformers==4.45.1
 loguru==0.4.6
+onnx==1.17.0
+onnxruntime==1.19.2
