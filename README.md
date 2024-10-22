@@ -41,6 +41,27 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
     ```sh
     pip install -r requirements.txt
     ```
+## Directory Structure
+
+/segmentation_project/
+├── data_wrangling/
+│   ├── generate_posebowl_masks.py
+│   ├── binary_masks_to_yolo_polys.py
+│   ├── resize_and_merge_classes_spacecrafts.py
+│   ├── create_yaml.py
+│
+├── modeling/
+│   ├── train.py
+│   ├── utils.py
+│
+├── data/
+│   ├── posebowl_objdet/ (dataset directory)
+│   └── spacecrafts/ (dataset directory)
+│
+├── config.yaml (example config file for training)
+├── requirements.txt
+├── LICENSE
+└── README.md (this file)
 
 ## License
 
