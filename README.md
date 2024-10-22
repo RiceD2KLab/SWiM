@@ -26,10 +26,12 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
 
 2. Activate the environment
    -On Windows:
+   
         ```sh
         .\.venv\Scripts\activate
         ```
     -On macOS/Linux:
+   
         ```sh
         source .venv/bin/activate
         ```
