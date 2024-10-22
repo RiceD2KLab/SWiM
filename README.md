@@ -42,6 +42,8 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
     pip install -r requirements.txt
     ```
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
+
 
