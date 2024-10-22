@@ -9,7 +9,7 @@ POSEBOWL_SEG_DIR = DATA_DIR / "posebowl_segmented"
 MODELS_DIR = ROOT_DIR / "models"
 
 CONFIGS_DIR = ROOT_DIR / "configs"
-RUNS_DIR_NAME = "runs"
+RUNS_DIR_NAME = "experiment-runs"
 
 YAML_TEMPLATE = """# Train, val, test sets and data directory
 path: "$data_dir$" # dataset root dir

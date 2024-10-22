@@ -8,6 +8,6 @@ torch==2.4.1
 torchvision==0.19.1
 ml-collections==0.1.1
 pybboxes==0.1.6
-ultralytics==8.2.93
+ultralytics==8.3.20
 transformers==4.45.1
 loguru==0.4.6

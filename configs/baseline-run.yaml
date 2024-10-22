@@ -4,15 +4,14 @@ dataset:
   path: "dataset-v2"
   img_size: 640
 training:
-  name: "sanity-run"
-  epochs: 2
+  name: "baseline-run"
+  epochs: 150
   exist_ok: True # Overwrite the existing runs directory
   batch_size: 4 # 4 images per batch
-  # batch_size: 0.5 # 50% of the available GPU memory [Auto-mode with Utilization Fraction]
   learning_rate: 0.001
   device: [0]
   amp: True # Automatic Mixed Precision
   freeze: None
-  fraction: 0.3
+  fraction: 1.0
   plots: True
   resume: False

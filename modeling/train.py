@@ -14,6 +14,7 @@ from argparse import ArgumentParser
 import os
 import sys
 
+import torch
 from ml_collections import ConfigDict
 from ultralytics import YOLO
 
@@ -39,7 +40,7 @@ def train(cfg: ConfigDict) -> None:
         model=MODELS_DIR / cfg.model.name,
     )
     model.train(
-        data=os.path.join(cfg.dataset.path, "data.yaml"),
+        data=DATA_DIR / cfg.dataset.path / "data.yaml",
         epochs=cfg.training.epochs,
         batch=cfg.training.batch_size,
         device=cfg.training.device,
@@ -62,6 +63,9 @@ if __name__ == "__main__":
         required=True,
         help="The name of the configuration file.",
     )
+
+    logger.debug(f"Available GPU: {torch.cuda.is_available()}")
+    logger.debug(f"Current Device: {torch.cuda.current_device()}")
 
     args = arg_parser.parse_args()
     config = get_config(args.config_file)
