@@ -45,9 +45,13 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
 
 /segmentation_project/
 ├── data_wrangling/
+
 │   ├── generate_posebowl_masks.py
+
 │   ├── binary_masks_to_yolo_polys.py
+
 │   ├── resize_and_merge_classes_spacecrafts.py
+
 │   ├── create_yaml.py
 │
 ├── modeling/
