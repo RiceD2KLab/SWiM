@@ -65,17 +65,14 @@ To use onnx_pipeline.py, run the following command:
 ```sh
 python src/onnx_pipeline.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
 ```
-## Hardware and Model Details for Traning
+## Hardware for Traning
 
 | **Model**          | YOLOv8 - nano                                      |
-|--------------------|---------------------------------------------------|
-| **Data**           | Dataset v2 (Posebowl + Spacecrafts)                |
-| **Epochs**         | 73                                                 |
-| **Batch Size**     | 4                                                  |
-| **Img Size**       | 640 x 640                                          |
-| **Optimizer**      | SGD with Momentum                                  |
+|--------------------|----------------------------------------------------|
 | **GPU**            | NVIDIA GeForce RTX 4060 Laptop GPU                 |
 | **GPU Memory**     | 8GB                                                |
+| **CPU**            |                                                    |
+| **RAM**            |                                                    |
 
 
 ## Directory Structure
