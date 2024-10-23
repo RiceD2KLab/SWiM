@@ -10,6 +10,7 @@ MODELS_DIR = ROOT_DIR / "models"
 
 CONFIGS_DIR = ROOT_DIR / "configs"
 RUNS_DIR_NAME = "experiment-runs"
+LOGS_DIR_NAME = "logs"
 
 YAML_TEMPLATE = """# Train, val, test sets and data directory
 path: "$data_dir$" # dataset root dir
