@@ -46,7 +46,7 @@ This directory contains scripts and tools for training and utilizing the segment
 
 ```
 /modeling/
-├── train.py          # Script to train the YOLO segmentation model
+├── train.py          
 ```
 
 ```
