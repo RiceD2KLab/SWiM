@@ -13,3 +13,5 @@ transformers==4.45.1
 loguru==0.4.6
 wandb==0.18.5
 python-dotenv==1.0.1
+onnx==1.17.0
+onnxruntime==1.19.2
