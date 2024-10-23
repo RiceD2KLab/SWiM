@@ -1,6 +1,7 @@
 # Utils
 
-This directory contains scripts and tools for training and utilizing the segmentation models for the NASA Segmentation F24 project.
+This directory provides essential utilities for configuring the training environment for the NASA Segmentation F24 project. It currently contains a single script, `config.py`, which helps manage and load configuration settings for the project.
+
 
 ## Contents
 
