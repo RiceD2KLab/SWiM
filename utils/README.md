@@ -1,34 +1,16 @@
-# Modeling and Utils
+# Utils
 
 This directory contains scripts and tools for training and utilizing the segmentation models for the NASA Segmentation F24 project.
 
 ## Contents
 
-- `train.py`: Script for training the YOLO segmentation model using the Ultralytics library. This script loads configurations, initializes the model, and performs the training process, saving the results in the `runs/` directory.
-- `utils/config.py`: A utility script that contains helper functions, such as loading configuration files, used throughout the project. The key function, `get_config`, is used in the training script to load the necessary parameters from a YAML file.
+- `config.py`: A utility script that contains helper functions, such as loading configuration files, used throughout the project. The key function, `get_config`, is used in the training script to load the necessary parameters from a YAML file.
 
 ## Usage
 
-1. **Training the YOLO Model**: 
-   Run `train.py` to train a segmentation model using the Ultralytics YOLO framework.
-
-   This script expects a YAML configuration file to be passed via the command line, which defines various parameters like the model type, dataset path, number of epochs, and more.
-
-   ```sh
-   python train.py --config_file config.yaml
    ```
 
-   The `config_file` should contain:
-   - `model.name`: Name of the YOLO model to use.
-   - `dataset.path`: Path to the dataset directory that contains the `data.yaml`.
-   - Other training parameters like batch size, epochs, etc.
-
-   Example usage:
-   ```sh
-   python train.py --config_file yolo_config.yaml
-   ```
-
-2. **Utility Functions in `utils/config.py`**: 
+1. **Utility Functions in `config.py`**: 
    The `config.py` script provides utility functions that simplify the training process. Specifically, the `get_config` function is used in the `train.py` script to load the necessary training configurations from a YAML file. 
 
    **`get_config(config_file: str) -> ConfigDict`**:
