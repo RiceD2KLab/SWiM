@@ -112,6 +112,7 @@ After running the YOLOv8 segmentation model, you can expect to receive segmentat
 <img width="545" alt="Screen Shot 2024-10-23 at 4 52 30 PM" src="https://github.com/user-attachments/assets/87561e48-4e22-41d9-bd77-8354979e6cfd">
 
 **Example Output**
+
 <img width="551" alt="Screen Shot 2024-10-23 at 4 52 35 PM" src="https://github.com/user-attachments/assets/405feb25-03f9-4478-9739-c6f07ed445f1">
 
 Segmentation Masks: These masks outline the spacecraft components identified in the images.
