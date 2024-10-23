@@ -42,14 +42,3 @@ This directory contains scripts and tools for training and utilizing the segment
 
    The configuration returned by `get_config` is used to set up the YOLO model training.
 
-## Directory Structure
-
-```
-/modeling/
-├── train.py          
-```
-
-```
-/utils/
-├── config.py        
-```
