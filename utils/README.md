@@ -8,14 +8,12 @@ This directory contains scripts and tools for training and utilizing the segment
 
 ## Usage
 
-   ```
-
 1. **Utility Functions in `config.py`**: 
    The `config.py` script provides utility functions that simplify the training process. Specifically, the `get_config` function is used in the `train.py` script to load the necessary training configurations from a YAML file. 
 
    **`get_config(config_file: str) -> ConfigDict`**:
    - **Purpose**: This function loads the YAML configuration file specified in the command line when running `train.py`.
-   - **Usage in `train.py`**: The function is called to load the configuration file, which contains important settings such as model name, dataset path, and training parameters.
+   - **Usage in `train.py`**: The function loads the configuration file, which contains important settings such as model name, dataset path, and training parameters.
 
    ```python
    from utils import get_config
