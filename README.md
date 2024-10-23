@@ -2,7 +2,7 @@
 # Segmentation of an unknown spacecraft for In-space Inspection
 
 ## Project Description
-This project aims to develop a real-time segmentation algorithm for in-space inspection of spacecraft using deep learning techniques. The focus is to build a general-purpose instance segmentation model that can accurately detect and mask spacecraft components. The model will be trained on synthetic and real datasets using the YOLOv8 nano model, optimized to run on resource-constrained hardware. This algorithm is expected to enhance NASA’s capability for autonomous inspections, improving spacecraft navigation, pose estimation, and structural analysis under various visual distortions in space imagery.
+This project aims to develop a real-time segmentation algorithm for in-space inspection of spacecraft using deep learning techniques. The focus is to build a general-purpose instance segmentation model that can accurately detect and mask spacecraft components. The model will be trained on synthetic and real datasets using the You Only Look Once (YOLO)v8 nano model, optimized to run on resource-constrained hardware. This algorithm is expected to enhance NASA’s capability for autonomous inspections, improving spacecraft navigation, pose estimation, and structural analysis under various visual distortions in space imagery.
 
 
 ## Software dependencies
@@ -65,6 +65,18 @@ To use onnx_pipeline.py, run the following command:
 ```sh
 python src/onnx_pipeline.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
 ```
+## Hardware and Model Details for Traning
+
+| **Model**          | YOLOv8 - nano                                      |
+|--------------------|---------------------------------------------------|
+| **Data**           | Dataset v2 (Posebowl + Spacecrafts)                |
+| **Epochs**         | 73                                                 |
+| **Batch Size**     | 4                                                  |
+| **Img Size**       | 640 x 640                                          |
+| **Optimizer**      | SGD with Momentum                                  |
+| **GPU**            | NVIDIA GeForce RTX 4060 Laptop GPU                 |
+| **GPU Memory**     | 8GB                                                |
+
 
 ## Directory Structure
  ```sh
@@ -91,6 +103,22 @@ python src/onnx_pipeline.py --model best.onnx --input input_image.png --output o
 ├── CONTRIBUTING
 └── README.md 
  ```
+
+## Sample Output of the YoloV8 Model
+After running the YOLOv8 segmentation model, you can expect to receive segmentation masks along with various logs and performance metrics that demonstrate the model's efficiency in detecting and masking spacecraft components in real-time.
+
+**Example Input**
+
+<img width="545" alt="Screen Shot 2024-10-23 at 4 52 30 PM" src="https://github.com/user-attachments/assets/87561e48-4e22-41d9-bd77-8354979e6cfd">
+
+**Example Output**
+<img width="551" alt="Screen Shot 2024-10-23 at 4 52 35 PM" src="https://github.com/user-attachments/assets/405feb25-03f9-4478-9739-c6f07ed445f1">
+
+Segmentation Masks: These masks outline the spacecraft components identified in the images.
+Bounding Boxes: Predicted bounding boxes for detected spacecraft objects.
+
+
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
