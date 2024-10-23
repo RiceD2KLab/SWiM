@@ -71,7 +71,7 @@ python src/onnx_pipeline.py --model best.onnx --input input_image.png --output o
 |--------------------|----------------------------------------------------|
 | **GPU**            | NVIDIA GeForce RTX 4060 Laptop GPU                 |
 | **GPU Memory**     | 8GB                                                |
-| **CPU**            | 13th Gen Intel(R) Core(TM) i9-13900h               |                                  |
+| **CPU**            | 13th Gen Intel(R) Core(TM) i9-13900H (2.60 GHz)    |                                  |
 | **RAM**            | 16.0 GB                                            |
 
 
