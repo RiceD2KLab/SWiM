@@ -6,71 +6,90 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
 
 
 ## Software dependencies
-[![Python 3.11+](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-311/)
-- Ultralytics YOLOv8
-- PyTorch
-- OpenCV
-- NumPy
-- Matplotlib
-- Segment Anything Model (SAM2)
-- TQDM (for progress bars)
-- Loguru (for logging)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-311/) ![CUDA v12.1](https://img.shields.io/badge/CUDA-v12_1-violet)
+
+### Training Dependencies
+- numpy==1.23.5
+- opencv-python==4.10.0.84
+- pillow==10.4.0
+- matplotlib==3.7.2
+- torch==2.4.1
+- torchvision==0.19.1
+- ml-collections==0.1.1
+- pybboxes==0.1.6
+- ultralytics==8.0.238
+- transformers==4.45.1
+- loguru==0.4.6
+- wandb==0.18.5
+- python-dotenv==1.0.1
+
+### Inference Dependencies
+- numpy==1.23.5
+- opencv-python==4.10.0.84
+- pillow==10.4.0
+- torch==2.4.1
+- torchvision==0.19.1
+- ultralytics==8.0.238
+- onnx==1.17.0
+- onnxruntime==1.19.2
 
 ## Setup
 
 1. Create a Python `venv` environment
 
     ```sh
-    python3 -m venv .venv
+    python -m venv .venv
     ```
 
 2. Activate the environment
-   -On Windows:
+   - On Windows:
    
         ```sh
         .\.venv\Scripts\activate
         ```
-    -On macOS/Linux:
+   - On macOS/Linux:
    
         ```sh
         source .venv/bin/activate
         ```
 
-4. Install requirements
+3. Install requirements
 
     ```sh
     pip install -r requirements.txt
     ```
-
+    
 ## Usage
 To use onnx_pipeline.py, run the following command:
 
 ```sh
-python script_name.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
-
+python src/onnx_pipeline.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
 ```
 
 ## Directory Structure
  ```sh
-/segmentation_project/
+/NASA_segmentation_F24/
 ├── data_wrangling/
 │   ├── generate_posebowl_masks.py
 │   ├── binary_masks_to_yolo_polys.py
 │   ├── resize_and_merge_classes_spacecrafts.py
-│   ├── create_yaml.py
-│
+│   └── create_yaml.py
 ├── modeling/
-│   ├── train.py
-│   ├── utils.py
-│
+│   └── train.py
+├── testing/
+│   ├── benchmark.py
+│   └── validate.py
+├── utils/
+│   └── config.py
 ├── data/
-│   ├── posebowl_objdet/ (dataset directory)
-│   └── spacecrafts/ (dataset directory)
-│
-├── config.yaml (example config file for training)
+│   ├── dataset-v1/ 
+│   └── dataset-v2/ 
+├── configs/
+│   └── config.yaml
 ├── requirements.txt
 ├── LICENSE
-└── README.md (this file)
+├── CONTRIBUTING
+└── README.md 
  ```
 ## License
 
