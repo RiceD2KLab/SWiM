@@ -124,6 +124,9 @@ dmypy.json
 
 # VSCode
 .vscode/
+experiment-runs/
+wandb/
+.env
 
 # VSCode extensions
 .vscode-test/
@@ -142,3 +145,4 @@ __pycache__/
 *.joblib
 *.pb
 *.ckpt
+*.pt
