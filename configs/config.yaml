@@ -1,10 +1,10 @@
-model:
-  name: "yolov8n-seg.pt"
+experiment:
+  name: "sanity-run"
+  model: "yolov8n-seg.pt"
 dataset:
   path: "dataset-v2"
   img_size: 640
 training:
-  name: "sanity-run"
   epochs: 2
   exist_ok: True # Overwrite the existing runs directory
   batch_size: 6 # num images per batch
@@ -16,3 +16,9 @@ training:
   fraction: 0.3
   plots: True
   resume: False
+benchmark:
+  device: 0 # [0] or "cpu"
+  img_size: 640
+  fp16_quant: False
+  int8_quant: False
+  verbose: True

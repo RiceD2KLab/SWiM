@@ -15,8 +15,6 @@ training:
   fraction: 1.0
   plots: True
   resume: False
-validation:
-  int_8: False
 benchmark:
   device: 0 # [0] or "cpu"
   img_size: 640
