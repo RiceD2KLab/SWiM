@@ -77,10 +77,10 @@ sh ./run_container.sh
 To accurately benchmark the inference speed of the YOLO model under resource-constrained conditions, we simulate the limited CPU capabilities of an **UP Board's Intel® Atom™ x5-Z8350 SoC**. This is achieved by setting a CPU limit when running the Docker container. The command used in the script `run_container.sh` is:
 
 ```bash
-docker run --cpus="1.4" -v "$(pwd)/submissions:/code_execution/submissions/" yolo_benchmark
+docker run --cpus="1.4" --memory="4g" -v "$(pwd)/submissions:/code_execution/submissions/" yolo_benchmark
 ```
 
-The **Intel® Atom™ x5-Z8350 SoC** is designed for low power consumption and is typically used in embedded systems. By constraining the CPU resources to *~1.4 cores*, we aim to create a realistic environment that mimics the performance of the target hardware.
+The **Intel® Atom™ x5-Z8350 SoC** is designed for low power consumption and is typically used in embedded systems. By constraining the CPU resources to *~1.4 cores* and *4GB RAM*, we aim to create a realistic environment that mimics the performance of the target hardware.
 
 ### Testing the Environment
 
