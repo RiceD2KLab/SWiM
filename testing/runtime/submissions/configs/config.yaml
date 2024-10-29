@@ -1,0 +1,7 @@
+model_name: "baseline_yolov8n"
+benchmark:
+  device: "cpu" # [0] or "cpu"
+  img_size: 640
+  fp16_quant: False
+  int8_quant: False
+  verbose: True

@@ -1,0 +1,14 @@
+numpy
+opencv-python
+Pillow
+matplotlib
+torch
+torchvision
+ml-collections
+ultralytics
+transformers
+loguru
+onnx
+onnxruntime
+onnxslim
+openvino

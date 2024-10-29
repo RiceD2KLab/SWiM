@@ -8,9 +8,9 @@ torch==2.4.1
 torchvision==0.19.1
 ml-collections==0.1.1
 pybboxes==0.1.6
-ultralytics==8.0.238
+ultralytics==8.3.23
 transformers==4.45.1
-loguru==0.4.6
+loguru==0.4.1
 wandb==0.18.5
 python-dotenv==1.0.1
 onnx==1.17.0

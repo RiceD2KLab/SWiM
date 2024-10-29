@@ -1,0 +1,9 @@
+# Train, val, test sets and data directory
+path: "/code_execution/submissions/data/" # dataset root dir
+train: images/train # train dir
+val: images/val # val dir
+test: images/test # test dir
+
+# Classes
+names:
+    0: spacecraft
