@@ -3,6 +3,7 @@ import os
 import cv2
 import numpy as np
 from skimage.metrics import hausdorff_distance
+
 from ultralytics import YOLO
 import torch
 
@@ -26,25 +27,16 @@ def load_instance_segmentation_data(image_path, txt_path):
 
     return image, ground_truth_masks
 
-def make_yolo_predictions(model, image):
-    # Assuming you have a function to preprocess the image and make predictions
-    predictions = model.predict(image)
-    return predictions
-
-def yolo_predictions_to_masks(predictions, image_shape):
+def yolo_predictions_to_masks(results, image_shape):
     height, width, _ = image_shape
     prediction_masks = []
 
-    for prediction in predictions:
-        mask = np.zeros((height, width), dtype=np.uint8)
-        for pred in prediction:
-            x, y, w, h, _, _ = pred
-            x1, y1 = int((x - w / 2) * width), int((y - h / 2) * height)
-            x2, y2 = int((x + w / 2) * width), int((y + h / 2) * height)
-            # Assuming polygon coordinates are available in the prediction
-            # For simplicity, using bounding box coordinates here
-            cv2.rectangle(mask, (x1, y1), (x2, y2), 255, -1)
-        prediction_masks.append(mask)
+    for result in results:
+        masks = result.masks
+        for mask in masks:
+            pred_mask = np.zeros((height, width), dtype=np.uint8)
+            pred_mask[mask] = 255
+            prediction_masks.append(pred_mask)
 
     return prediction_masks
 
@@ -83,35 +75,38 @@ def main():
     model_path = args.model_path
 
     # Initialize YOLO model
-    yolo_model = YOLO(model_path)
+    model = YOLO(model_path)
+
+    # Get list of image paths
+    image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir) if filename.endswith('.jpg') or filename.endswith('.png')]
+
+    # Make predictions using the YOLO model
+    results = model(image_paths)
 
     dice_coefficients = []
     hausdorff_distances = []
-    for filename in os.listdir(image_dir):
-        if filename.endswith('.jpg') or filename.endswith('.png'):
-            image_path = os.path.join(image_dir, filename)
-            txt_path = os.path.join(txt_dir, filename.split('.')[0] + '.txt')
 
-            image, ground_truth_masks = load_instance_segmentation_data(image_path, txt_path)
-            predictions = make_yolo_predictions(yolo_model, image)
-            prediction_masks = yolo_predictions_to_masks(predictions, image.shape)
+    for image_path, result in zip(image_paths, results):
+        txt_path = os.path.join(txt_dir, os.path.basename(image_path).split('.')[0] + '.txt')
+        image, ground_truth_masks = load_instance_segmentation_data(image_path, txt_path)
+        prediction_masks = yolo_predictions_to_masks([result], image.shape)
 
-            # Calculate Dice coefficient for each instance
-            instance_dice_coefficients = []
-            instance_hausdorff_distances = []
-            for ground_truth_mask, prediction_mask in zip(ground_truth_masks, prediction_masks):
-                dice_coeff = dice_coefficient(ground_truth_mask, prediction_mask)
-                instance_dice_coefficients.append(dice_coeff)
+        # Calculate Dice coefficient for each instance
+        instance_dice_coefficients = []
+        instance_hausdorff_distances = []
+        for ground_truth_mask, prediction_mask in zip(ground_truth_masks, prediction_masks):
+            dice_coeff = dice_coefficient(ground_truth_mask, prediction_mask)
+            instance_dice_coefficients.append(dice_coeff)
 
-                hd = hausdorff_distance_contours(ground_truth_mask, prediction_mask)
-                instance_hausdorff_distances.append(hd)
+            hd = hausdorff_distance_contours(ground_truth_mask, prediction_mask)
+            instance_hausdorff_distances.append(hd)
 
-            # Average Dice coefficient and Hausdorff distance for all instances in the image
-            average_dice_coeff = np.mean(instance_dice_coefficients)
-            average_hausdorff_distance = np.mean(instance_hausdorff_distances)
+        # Average Dice coefficient and Hausdorff distance for all instances in the image
+        average_dice_coeff = np.mean(instance_dice_coefficients)
+        average_hausdorff_distance = np.mean(instance_hausdorff_distances)
 
-            dice_coefficients.append(average_dice_coeff)
-            hausdorff_distances.append(average_hausdorff_distance)
+        dice_coefficients.append(average_dice_coeff)
+        hausdorff_distances.append(average_hausdorff_distance)
 
     # Print the average Dice coefficient and Hausdorff distance across all images
     average_dice_coefficient = np.mean(dice_coefficients)
