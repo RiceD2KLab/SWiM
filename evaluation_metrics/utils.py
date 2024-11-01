@@ -3,6 +3,8 @@ import os
 import cv2
 import numpy as np
 from skimage.metrics import hausdorff_distance
+from ultralytics import YOLO
+import torch
 
 def load_instance_segmentation_data(image_path, txt_path):
     image = cv2.imread(image_path)
@@ -81,8 +83,7 @@ def main():
     model_path = args.model_path
 
     # Initialize YOLO model
-    # Assuming you have a function to load the YOLO model
-    yolo_model = # Load your YOLO model here
+    yolo_model = YOLO(model_path)
 
     dice_coefficients = []
     hausdorff_distances = []
