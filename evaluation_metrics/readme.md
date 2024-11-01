@@ -8,8 +8,8 @@ This script is designed to evaluate the performance of an instance segmentation 
 - `cv2` (OpenCV)
 - `numpy`
 - `scikit-image`
-- 'torch'
-- 'ultralytics'
+- `torch`
+- `ultralytics`
 
 ## Usage
 
