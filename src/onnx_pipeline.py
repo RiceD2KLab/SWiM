@@ -69,7 +69,11 @@ class YOLOv8Seg:
         Args:
             onnx_model (str): Path to the ONNX model file.
         """
-        self.session = ort.InferenceSession(onnx_model)
+        session_options = ort.SessionOptions()
+        session_options.enable_profiling = False 
+        session_options.intra_op_num_threads = 3   # Number of threads within a single operation
+        session_options.inter_op_num_threads = 1   # Number of threads across multiple operations
+        self.session = ort.InferenceSession(onnx_model, sess_options=session_options)
         self.ndtype = np.float32 if self.session.get_inputs()[0].type == 'tensor(float)' else np.float16
         self.model_height, self.model_width = [x.shape for x in self.session.get_inputs()][0][-2:]
         self.color_palette = Colors()
