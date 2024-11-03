@@ -62,7 +62,7 @@ class YOLOv8Seg:
         model_width (int): Width of the model input.
         color_palette (Colors): Instance of the Colors class for visualization.
     """
-    def __init__(self, onnx_model):
+    def __init__(self, onnx_model, num_threads=3, num_streams=1):
         """
         Initializes the YOLOv8Seg model by loading the ONNX model and setting the input dimensions.
 
@@ -71,8 +71,8 @@ class YOLOv8Seg:
         """
         session_options = ort.SessionOptions()
         session_options.enable_profiling = False 
-        session_options.intra_op_num_threads = 3   # Number of threads within a single operation
-        session_options.inter_op_num_threads = 1   # Number of threads across multiple operations
+        session_options.intra_op_num_threads = num_threads   # Number of threads within a single operation
+        session_options.inter_op_num_threads = num_streams   # Number of threads across multiple operations
         self.session = ort.InferenceSession(onnx_model, sess_options=session_options)
         self.ndtype = np.float32 if self.session.get_inputs()[0].type == 'tensor(float)' else np.float16
         self.model_height, self.model_width = [x.shape for x in self.session.get_inputs()][0][-2:]
@@ -149,7 +149,24 @@ class YOLOv8Seg:
                 - segments: List of segmentation contour segments.
                 - masks: Boolean array representing the masks for the detected objects.
         """
-        # Your existing postprocessing logic here
+        x, protos = preds[0], preds[1]
+        print(x.shape, protos.shape)
+        x = np.einsum('bcn->bnc', x)
+        x = x[np.amax(x[..., 4:-nm], axis=-1) > conf_threshold]
+        x = np.c_[x[..., :4], np.amax(x[..., 4:-nm], axis=-1), np.argmax(x[..., 4:-nm], axis=-1), x[..., -nm:]]
+        x = x[cv2.dnn.NMSBoxes(x[:, :4], x[:, 4], conf_threshold, iou_threshold)]
+        if len(x) > 0:
+            x[..., [0, 1]] -= x[..., [2, 3]] / 2
+            x[..., [2, 3]] += x[..., [0, 1]]
+            x[..., :4] -= [pad_w, pad_h, pad_w, pad_h]
+            x[..., :4] /= min(ratio)
+            x[..., [0, 2]] = x[:, [0, 2]].clip(0, im0.shape[1])
+            x[..., [1, 3]] = x[:, [1, 3]].clip(0, im0.shape[0])
+            masks = self.process_mask(protos[0], x[:, 6:], x[:, :4], im0.shape)
+            segments = self.masks2segments(masks)
+            return x[..., :6], segments, masks
+        else:
+            return [], [], []
 
     def process_mask(self, protos, masks_in, bboxes, im0_shape):
         """
@@ -164,7 +181,13 @@ class YOLOv8Seg:
         Returns:
             numpy.ndarray: Resized and cropped masks.
         """
-        # Your existing process_mask logic here
+        c, mh, mw = protos.shape
+        masks = np.matmul(masks_in, protos.reshape((c, -1))).reshape((-1, mh, mw)).transpose(1, 2, 0)
+        masks = np.ascontiguousarray(masks)
+        masks = self.scale_mask(masks, im0_shape)
+        masks = np.einsum('HWN -> NHW', masks)
+        masks = self.crop_mask(masks, bboxes)
+        return np.greater(masks, 0.5)
 
     def scale_mask(self, masks, im0_shape, ratio_pad=None):
         """
@@ -178,7 +201,19 @@ class YOLOv8Seg:
         Returns:
             numpy.ndarray: Resized masks.
         """
-        # Your existing scale_mask logic here
+        im1_shape = masks.shape[:2]
+        if ratio_pad is None:
+            gain = min(im1_shape[0] / im0_shape[0], im1_shape[1] / im0_shape[1])
+            pad = (im1_shape[1] - im0_shape[1] * gain) / 2, (im1_shape[0] - im0_shape[0] * gain) / 2
+        else:
+            pad = ratio_pad[1]
+        top, left = int(round(pad[1] - 0.1)), int(round(pad[0] - 0.1))
+        bottom, right = int(round(im1_shape[0] - pad[1] + 0.1)), int(round(im1_shape[1] - pad[0] + 0.1))
+        masks = masks[top:bottom, left:right]
+        masks = cv2.resize(masks, (im0_shape[1], im0_shape[0]), interpolation=cv2.INTER_LINEAR)
+        if len(masks.shape) == 2:
+            masks = masks[:, :, None]
+        return masks
 
     def crop_mask(self, masks, boxes):
         """
@@ -191,7 +226,11 @@ class YOLOv8Seg:
         Returns:
             numpy.ndarray: Cropped masks.
         """
-        # Your existing crop_mask logic here
+        n, h, w = masks.shape
+        x1, y1, x2, y2 = np.split(boxes[:, :, None], 4, 1)
+        r = np.arange(w, dtype=x1.dtype)[None, None, :]
+        c = np.arange(h, dtype=x1.dtype)[None, :, None]
+        return masks * ((r >= x1) * (r < x2) * (c >= y1) * (c < y2))
 
     def masks2segments(self, masks):
         """
@@ -203,7 +242,15 @@ class YOLOv8Seg:
         Returns:
             list: List of contour segments for each mask.
         """
-        # Your existing masks2segments logic here
+        segments = []
+        for mask in masks.astype(np.uint8):
+            c = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[0]
+            if c:
+                c = np.array(c[np.array([len(x) for x in c]).argmax()]).reshape(-1, 2)
+            else:
+                c = np.zeros((0, 2))
+            segments.append(c.astype('float32'))
+        return segments
 
     def draw_and_visualize(self, im, bboxes, segments, vis=True, save=False):
         """
@@ -219,7 +266,17 @@ class YOLOv8Seg:
         Returns:
             numpy.ndarray: Image with drawn bounding boxes and masks.
         """
-        # Your existing draw_and_visualize logic here
+        im_canvas = im.copy()
+        for (*box, conf, cls_), segment in zip(bboxes, segments):
+            cv2.polylines(im, np.int32([segment]), True, (255, 255, 255), 2)
+            cv2.fillPoly(im_canvas, np.int32([segment]), self.color_palette(int(cls_), bgr=True))
+            cv2.rectangle(im, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])),
+                          self.color_palette(int(cls_), bgr=True), 1, cv2.LINE_AA)
+            cv2.putText(im, f'Class {cls_}: {conf:.3f}', (int(box[0]), int(box[1] - 9)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, self.color_palette(int(cls_), bgr=True), 2, cv2.LINE_AA)
+            print(int(box[0]), int(box[1]), int(box[2]), int(box[3]), conf, cls_)
+        im = cv2.addWeighted(im_canvas, 0.3, im, 0.7, 0)
+        return im
 
 if __name__ == '__main__':
     # Argument parsing for command-line options
@@ -227,12 +284,14 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='best.onnx', help='Path to the ONNX model file')
     parser.add_argument('--input', type=str, required=True, help='Path to the input image file')
     parser.add_argument('--output', type=str, default='output_segmented_image.jpg', help='Path to save the output image')
+    parser.add_argument('--num_threads', type=int, default=4, help='Number of threads to use for inference')
+    parser.add_argument('--num_streams', type=int, default=1, help='Number of streams to use for inference')
     args = parser.parse_args()
 
     start_time = time.time()
 
     # Initialize the model
-    model = YOLOv8Seg(args.model)
+    model = YOLOv8Seg(args.model, num_threads=args.num_threads, num_streams=args.num_streams)
 
     # Load input image
     img = cv2.imread(args.input)

@@ -63,7 +63,7 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
 To use onnx_pipeline.py, run the following command:
 
 ```sh
-python src/onnx_pipeline.py --model best.onnx --input input_image.png --output output_segmented_image.jpg
+python src/onnx_pipeline.py --model best.onnx --input input_image.png --output output_segmented_image.jpg --num_threads 3 --num_streams 1
 ```
 ## Hardware for Traning
 
