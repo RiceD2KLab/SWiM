@@ -98,8 +98,10 @@ python src/onnx_pipeline.py --model best.onnx --input input_image.png --output o
 ├── requirements.txt
 ├── LICENSE
 ├── CONTRIBUTING
+├── .env.example
 └── README.md 
  ```
+
 
 ## Sample Output of the YoloV8 Model
 After running the YOLOv8 segmentation model, you can expect to receive segmentation masks along with various logs and performance metrics that demonstrate the model's efficiency in detecting and masking spacecraft components in real-time.
@@ -116,10 +118,27 @@ After running the YOLOv8 segmentation model, you can expect to receive segmentat
 - Bounding Boxes: Predicted bounding boxes for detected spacecraft objects.
 
 
+## Weights & Biases Logging
+
+To enable logging of validation results to Weights & Biases (WandB), you'll need to set your WandB API key in a `.env` file. Follow these steps to configure it:
+
+1. **Create a `.env` file** in the root directory of your project based on the provided example:
+
+   ```sh
+   cp .env.example .env
+   ```
+
+2. **Open the `.env` file** and add your WandB API key:
+
+   ```env
+   WAND_API_KEY = "YOUR_API_KEY"
+   ```
+
+   Replace `YOUR_API_KEY` with your actual WandB API key, which you can obtain from your [Weights & Biases account](https://wandb.ai/).
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
+This project is licensed under the APACHE License. See the [LICENSE](../LICENSE) file for details.
 
 
 

@@ -33,9 +33,16 @@ untracked/
 *.manifest
 *.spec
 
+**/images/**/*.png
+**/labels/**/*.txt
+**/models/*
+**/logs/*
+**/*-nc71*
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+*.cache
 
 # Unit test / coverage reports
 htmlcov/
