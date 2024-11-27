@@ -1,6 +1,6 @@
 experiment:
-  name: "baseline-run"
-  model: "yolov8n-seg.pt"
+  name: "medium-run"
+  model: "yolov8m-seg.pt"
 dataset:
   path: "dataset-v2"
   img_size: 640
@@ -9,7 +9,7 @@ training:
   exist_ok: True # Overwrite the existing runs directory
   batch_size: 4 # num images per batch
   learning_rate: 0.001
-  device: [0]
+  device: 'mps'
   amp: True # Automatic Mixed Precision
   freeze: None
   fraction: 1.0

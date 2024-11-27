@@ -80,8 +80,8 @@ if __name__ == "__main__":
         help="The name of the configuration file.",
     )
 
-    logger.debug(f"Available GPU: {torch.cuda.is_available()}")
-    logger.debug(f"Current Device: {torch.cuda.current_device()}")
+    logger.debug(f"Available GPU: {torch.backends.mps.is_available()}")
+    #logger.debug(f"Current Device: {torch.backends.mps.current_device()}")
 
     load_dotenv()
 
