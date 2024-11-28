@@ -82,8 +82,12 @@ python3 dice_and_hausdorff.py --image_dir /path/to/images --txt_dir /path/to/txt
 ```
 
 **Arguments:**
+
 --image_dir (str): Directory containing input images. Required.
+
 --txt_dir (str): Directory containing corresponding YOLO format TXT files. Required.
+
 --model_path (str): Path to the trained YOLO model. Required.
+
 --log_dir (str): Directory to save log file (default: root directory). Optional.
 
