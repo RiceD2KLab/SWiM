@@ -18,7 +18,7 @@ class YOLOv8Seg:
     def __call__(self, im0, conf_threshold=0.4, iou_threshold=0.45, nm=32):
         im, ratio, (pad_w, pad_h) = self.preprocess(im0)
         preds = self.session.run(None, {self.session.get_inputs()[0].name: im})
-        #print(len(preds))  # Debugging: print number of predictions
+        # print('Length of original predictions', len(preds))  # Debugging: print number of predictions
         boxes, segments, masks = self.postprocess(preds, im0=im0, ratio=ratio, pad_w=pad_w, pad_h=pad_h,
                                                   conf_threshold=conf_threshold, iou_threshold=iou_threshold, nm=nm)
         return boxes, segments, masks
@@ -122,13 +122,20 @@ class YOLOv8Seg:
 
     def get_pred_and_true(self, image, txt_file_path, og_shape=(1024, 1280)):
         """Get predicted and true masks."""
-        boxes, segments, masks = self(image)
-        y_pred = (prediction[0].masks.data.squeeze(0) * 255).numpy().astype(np.uint8)
-        print('get_pred_and_true y_pred, prediction.mask shape: ', y_pred.shape, prediction[0].masks.data.shape)
         mask_image = eval.process_yolo_txt_file(txt_file_path, og_shape)
+        
+        if mask_image is None:
+            # If > 1 spacecraft, mask_image = None. So we skip it.
+            return None, None
+        
+        _, _, masks = self(image)
+        
+        y_pred = (masks.squeeze(0) * 255).astype(np.uint8)
+        
         y_true = cv2.resize(mask_image * 255, (y_pred.shape[1], y_pred.shape[0]))
 
         return y_true, y_pred
+    
 
     # Evaluate model
     def evaluate(self, images_dir, txt_dir, log_dir='./', metrics='all'):
@@ -142,7 +149,7 @@ class YOLOv8Seg:
             metrics: Metrics to be calculated. Values can be one of 'dice', 'hausd' or 'all'.
         
         Returns:
-
+            List of dictionaries containing results
         """
 
         # Validate metrics and set flags
@@ -178,7 +185,11 @@ class YOLOv8Seg:
                     
                     img = cv2.imread(image_path)
                     y_true, y_pred = self.get_pred_and_true(img, txt_file_path)
-                    print('Shapes of img, y_true, y_pred', img.shape, y_true.shape, y_pred.shape)
+                    
+                    if y_true is None:
+                        print('\nSkipping {} as it has multiple spacecraft.'.format(image_path))
+                        continue
+                    
                     # Calculate metrics
                     if get_dice:
                         dice_score = eval.dice(y_pred, y_true)

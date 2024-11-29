@@ -21,9 +21,13 @@ def create_mask_from_polygons(image_shape, polygons):
 def process_yolo_txt_file(txt_file_path, image_shape):
     """Process a YOLO format TXT file and create masks."""
     polygons = []
-    
+    n_masks = 0
     with open(txt_file_path, 'r') as file:
         for line in file:
+            if n_masks > 1:
+                # if there are more than 1 spacecraft in the image, skip it.
+                return None
+            
             parts = list(map(float, line.strip().split()))
             class_index = int(parts[0])  # First part is the class index
             coords = parts[1:]  # Remaining parts are the coordinates
@@ -31,6 +35,8 @@ def process_yolo_txt_file(txt_file_path, image_shape):
             # Group coordinates into pairs (x, y)
             poly_points = [(coords[i], coords[i + 1]) for i in range(0, len(coords), 2)]
             polygons.append(poly_points)
+            
+            n_masks += 1
 
     # Create the mask from polygons
     mask_image = create_mask_from_polygons(image_shape, polygons)
@@ -40,19 +46,17 @@ def process_yolo_txt_file(txt_file_path, image_shape):
 def get_pred_and_true(image_path, txt_file_path, model, og_shape=(1024, 1280)):
     """Get predicted and true masks."""
     prediction = model(image_path)
-    print('\nPREDICTION: ', len(prediction), prediction[0])
-    print('\n MASK: ', prediction[0].masks.data.shape, prediction[0].masks.data)
     y_pred = (prediction[0].masks.data.squeeze(0) * 255).numpy().astype(np.uint8)
-    print('get_pred_and_true y_pred, prediction.mask shape: ', y_pred.shape, prediction[0].masks.data.shape)
+    
     mask_image = process_yolo_txt_file(txt_file_path, og_shape)
     y_true = cv2.resize(mask_image * 255, (y_pred.shape[1], y_pred.shape[0]))
 
     return y_true, y_pred
 
-def dice(pred, true, k=255):
+def dice(y_true, y_pred, k=255):
     """Calculate Dice coefficient."""
-    intersection = np.sum(pred[true == k]) * 2.0
-    dice_score = intersection / (np.sum(pred) + np.sum(true))
+    intersection = np.sum(y_pred[y_true == k]) * 2.0
+    dice_score = intersection / (np.sum(y_pred) + np.sum(y_true))
     return dice_score
 
 def hausdorff_distance_mask(y_true, y_pred):
@@ -110,8 +114,10 @@ def main():
                 img = cv2.imread(image_path)
                 y_true, y_pred = get_pred_and_true(image_path, txt_file_path, model)
                 print('Shapes of img, y_true, y_pred', img.shape, y_true.shape, y_pred.shape)
+                
                 # Calculate metrics
-                dice_score = dice(y_pred, y_true)
+                
+                dice_score = dice(y_true, y_pred)
                 hausdorff_dist = hausdorff_distance_mask(y_true, y_pred)
 
                 # Log metrics to file
