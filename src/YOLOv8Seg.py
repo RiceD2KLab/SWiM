@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 import onnxruntime as ort
-import time
-import argparse
+import os
 
 from onnx_pipeline import Colors
+import evaluation_metrics as eval
 
 class YOLOv8Seg:
     def __init__(self, onnx_model):
@@ -120,3 +120,71 @@ class YOLOv8Seg:
         im = cv2.addWeighted(im_canvas, 0.3, im, 0.7, 0)
         return im
 
+    def get_pred_and_true(self, image, txt_file_path, og_shape=(1024, 1280)):
+        """Get predicted and true masks."""
+        boxes, segments, masks = self(image)
+        y_pred = (prediction[0].masks.data.squeeze(0) * 255).numpy().astype(np.uint8)
+        print('get_pred_and_true y_pred, prediction.mask shape: ', y_pred.shape, prediction[0].masks.data.shape)
+        mask_image = eval.process_yolo_txt_file(txt_file_path, og_shape)
+        y_true = cv2.resize(mask_image * 255, (y_pred.shape[1], y_pred.shape[0]))
+
+        return y_true, y_pred
+
+    # Evaluate model
+    def evaluate(self, images_dir, txt_dir, log_dir='./', metrics='all'):
+        """
+        Evaluates the model on specified metrics
+
+        Args:
+            images_dir: Path to the folder containing input images.
+            txt_dir: Path to the folder containing ground truth masks.
+            pred_dir: Path to the folder where predictions should be saved.
+            metrics: Metrics to be calculated. Values can be one of 'dice', 'hausd' or 'all'.
+        
+        Returns:
+
+        """
+
+        # Validate metrics and set flags
+        get_dice = False
+        get_hausd = False
+
+        if metrics == 'all':
+            get_dice = True
+            get_hausd = True
+        elif metrics == 'dice':
+            get_dice = True
+        elif metrics == 'hausd':
+            get_hausd = True
+        else:
+            # Throw error
+            raise ValueError("Please enter a valid metric string from: 'dice', 'hausd' or 'all'.")
+
+        log_file_path = os.path.join(log_dir, "metrics_log.txt") 
+
+        # Open the log file for writing metrics
+        with open(log_file_path, 'w') as log_file:
+            log_file.write("Image Name,Dice Coefficient,Hausdorff Distance\n")
+
+            # Process each image in the specified directory
+            for image_name in os.listdir(images_dir):
+                if image_name.endswith(('.png', '.jpg', '.jpeg')):  # Check for valid image formats
+                    image_path = os.path.join(images_dir, image_name)
+                    txt_file_path = os.path.join(txt_dir, os.path.splitext(image_name)[0] + '.txt')
+                    
+                    if not os.path.exists(txt_file_path):
+                        print(f"Warning: No corresponding TXT file found for {image_name}. Skipping.")
+                        continue
+                    
+                    img = cv2.imread(image_path)
+                    y_true, y_pred = self.get_pred_and_true(img, txt_file_path)
+                    print('Shapes of img, y_true, y_pred', img.shape, y_true.shape, y_pred.shape)
+                    # Calculate metrics
+                    if get_dice:
+                        dice_score = eval.dice(y_pred, y_true)
+                    if get_hausd:
+                        hausdorff_dist = eval.hausdorff_distance_mask(y_true, y_pred)
+
+                    # Log metrics to file
+                    log_file.write(f"{image_name},{dice_score:.4f},{hausdorff_dist:.4f}\n")
+                    print(f"Processed {image_name}: Dice={dice_score:.4f}, Hausdorff={hausdorff_dist:.4f}")
