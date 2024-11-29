@@ -120,15 +120,13 @@ class YOLOv8Seg:
         im = cv2.addWeighted(im_canvas, 0.3, im, 0.7, 0)
         return im
 
-    def get_pred_and_true(self, image, txt_file_path, og_shape=(1024, 1280)):
+    def get_pred_and_true(self, txt_file_path, masks, og_shape=(1024, 1280)):
         """Get predicted and true masks."""
         mask_image = eval.process_yolo_txt_file(txt_file_path, og_shape)
         
         if mask_image is None:
             # If > 1 spacecraft, mask_image = None. So we skip it.
             return None, None
-        
-        _, _, masks = self(image)
         
         y_pred = (masks.squeeze(0) * 255).astype(np.uint8)
         
@@ -138,7 +136,7 @@ class YOLOv8Seg:
     
 
     # Evaluate model
-    def evaluate(self, images_dir, txt_dir, log_dir='./', metrics='all'):
+    def evaluate(self, images_dir, txt_dir, log_dir='./model-evaluation', metrics='all'):
         """
         Evaluates the model on specified metrics
 
@@ -184,7 +182,13 @@ class YOLOv8Seg:
                         continue
                     
                     img = cv2.imread(image_path)
-                    y_true, y_pred = self.get_pred_and_true(img, txt_file_path)
+
+                    # Get predictions
+                    boxes, segments, masks = self(img)
+                    #print('Segments: ', segments)
+                    #print('Masks: ', masks)
+
+                    y_true, y_pred = self.get_pred_and_true(txt_file_path, masks)
                     
                     if y_true is None:
                         print('\nSkipping {} as it has multiple spacecraft.'.format(image_path))
@@ -199,3 +203,13 @@ class YOLOv8Seg:
                     # Log metrics to file
                     log_file.write(f"{image_name},{dice_score:.4f},{hausdorff_dist:.4f}\n")
                     print(f"Processed {image_name}: Dice={dice_score:.4f}, Hausdorff={hausdorff_dist:.4f}")
+
+                    # Draw and visualize the result
+                    if len(boxes) > 0:
+                        output_image = self.draw_and_visualize(img, boxes, segments, vis=False, save=True)
+                    else:
+                        output_image = img
+
+                    # Save and display result
+                    out_img_path = log_dir + '/out_' + image_name
+                    cv2.imwrite(out_img_path, output_image)
