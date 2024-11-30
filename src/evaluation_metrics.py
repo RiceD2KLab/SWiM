@@ -6,6 +6,7 @@ from skimage.draw import polygon
 from skimage.metrics import hausdorff_distance
 from skimage import metrics
 from skimage.measure import find_contours
+from scipy.spatial.distance import directed_hausdorff
 from ultralytics import YOLO
 
 def create_mask_from_polygons(image_shape, polygons):
@@ -61,18 +62,8 @@ def dice(y_true, y_pred, k=255):
 
 def hausdorff_distance_mask(y_true, y_pred):
     """Calculate the Hausdorff distance between two segmentation masks."""
-    # Find contours of the masks
-    contours1 = find_contours(y_true)
-    contours2 = find_contours(y_pred)
-
-    # Flatten contours to get points
-    points1 = np.vstack(contours1)
-    points2 = np.vstack(contours2)
-
-    # Calculate Hausdorff distance
-    distance = metrics.hausdorff_distance(points1, points2)
-
-    return distance
+    #return max(directed_hausdorff(y_pred, y_true)[0], directed_hausdorff(y_true, y_pred)[0])
+    return hausdorff_distance(y_true, y_pred, 'modified')
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluate segmentation masks using YOLO.")
