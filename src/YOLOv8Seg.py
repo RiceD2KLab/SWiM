@@ -123,9 +123,13 @@ class YOLOv8Seg:
     def get_pred_and_true(self, txt_file_path, masks, og_shape=(1024, 1280)):
         """Get predicted and true masks."""
         mask_image = eval.process_yolo_txt_file(txt_file_path, og_shape)
-        
         if mask_image is None:
-            # If > 1 spacecraft, mask_image = None. So we skip it.
+            # If > 1 spacecraft, mask_image = None. So we skip it.   
+            return None, None
+        
+        if masks == []:
+            # If mask_image is empty, we skip it!
+            print('No masks detected!!')
             return None, None
         
         y_pred = (masks.squeeze(0) * 255).astype(np.uint8)
@@ -165,6 +169,7 @@ class YOLOv8Seg:
             # Throw error
             raise ValueError("Please enter a valid metric string from: 'dice', 'hausd' or 'all'.")
 
+        # Prepare log file path
         log_file_path = os.path.join(log_dir, "metrics_log.txt") 
 
         # Open the log file for writing metrics
@@ -187,11 +192,10 @@ class YOLOv8Seg:
                     boxes, segments, masks = self(img)
                     #print('Segments: ', segments)
                     #print('Masks: ', masks)
-
                     y_true, y_pred = self.get_pred_and_true(txt_file_path, masks)
                     
                     if y_true is None:
-                        print('\nSkipping {} as it has multiple spacecraft.'.format(image_path))
+                        print('\nSkipping {} as it has multiple or 0 spacecraft.'.format(image_path))
                         continue
                     
                     # Calculate metrics
