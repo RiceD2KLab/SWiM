@@ -1,3 +1,13 @@
+"""
+This script generates images using the Stable Diffusion model based on text prompts.
+
+The script performs the following tasks:
+1. Loads the Stable Diffusion model.
+2. Reads prompts from a specified file.
+3. Generates images for each prompt using the Stable Diffusion model.
+4. Saves the generated images in the specified output directory."""
+
+
 import os
 import random
 import argparse

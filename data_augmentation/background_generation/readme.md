@@ -4,9 +4,9 @@
 The `image_generation.py` script generates images using the Stable Diffusion model. It allows to specify various parameters such as image dimensions, the number of images to generate per prompt, and the output directory for saving generated images. We can also provide a custom file containing prompts and set a random seed for reproducibility.
 
 ## Requirements
-To run this script, you need to have the following libraries installed:
+To run this script, make sure you have all the libraries installed enumerated in the requirements.txt file in the root directory. The critical libraries for this script is:
 
-- `torch==2.1.1+cu121`
+
 - `diffusers==0.31.0`
 
 ## Usage
