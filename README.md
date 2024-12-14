@@ -22,6 +22,7 @@ This project aims to develop a real-time segmentation algorithm for in-space ins
 - loguru==0.4.6
 - wandb==0.18.5
 - python-dotenv==1.0.1
+- diffusers==0.31.0
 
 ### Inference Dependencies
 - numpy==1.23.5
