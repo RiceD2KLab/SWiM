@@ -1,4 +1,4 @@
-# Image Generation with Stable Diffusion
+# Background Generation with Stable Diffusion
 
 ## Overview
 The `image_generation.py` script generates images using the Stable Diffusion model. It allows to specify various parameters such as image dimensions, the number of images to generate per prompt, and the output directory for saving generated images. We can also provide a custom file containing prompts and set a random seed for reproducibility.
