@@ -13,6 +13,10 @@ The `validate.py` script accepts several arguments to facilitate the validation 
 - `--split`: The split to validate on (either `val` or `test`).
 - `--log_to_wandb`: A boolean flag indicating whether to log the validation results to Weights & Biases.
 
+The `evaluate_model.py` script evaluates the model given the `model_path`, `metrics` to track, and input `image_dir`
+
+The `YOLOv8Seg.py` defines the Yolov8 class with helper methods to run evaluation.
+
 The `runtime/` subdirectory contains the core components for benchmarking YOLO model inference, providing a structured environment for model's inference speed testing.
 
 ## Usage
