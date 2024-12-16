@@ -65,7 +65,9 @@ To use onnx_pipeline.py, run the following command:
 ```sh
 python src/onnx_pipeline.py --model best.onnx --input input_image.png --output output_segmented_image.jpg --num_threads 3 --num_streams 1
 ```
-## Hardware for Traning
+## Hardware for Training
+
+Baseline model was trained on the following configuration:
 
 | **Model**          | YOLOv8 - nano                                      |
 |--------------------|----------------------------------------------------|
@@ -74,6 +76,14 @@ python src/onnx_pipeline.py --model best.onnx --input input_image.png --output o
 | **CPU**            | 13th Gen Intel(R) Core(TM) i9-13900H (2.60 GHz)    |                                  |
 | **RAM**            | 16.0 GB                                            |
 
+Other versions of the model were done on the cloud GPU provider: [modal.com](https://modal.com/)
+
+## Model files and Datasets
+All the trained models can be found [here](https://drive.google.com/drive/folders/1WxbuNpZJu50HF27rXzarGAWMtwsZDdTc?usp=drive_link). Download the appropriate pt file and save it under `models/` directory.
+
+All the dataset versions can be found [here](https://drive.google.com/drive/folders/1-vd2KWqrl9Z3fpG7iS_r1L7bfjOlIzFt?usp=drive_link). Download the appropriate dataset, unzip it and save it under the `data/` folder.
+
+Information about each dataset version is given in the README attached with the dataset detailing the makeup of the data and the splits.
 
 ## Directory Structure
  ```sh

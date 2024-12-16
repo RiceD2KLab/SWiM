@@ -17,6 +17,8 @@ The `evaluate_model.py` script evaluates the model given the `model_path`, `metr
 
 The `YOLOv8Seg.py` defines the Yolov8 class with helper methods to run evaluation.
 
+The `error-analysis/error_analyser.py` has script to infer polygon coordinates for the spacecraft and calculate the error from the ground truth mask.
+
 The `runtime/` subdirectory contains the core components for benchmarking YOLO model inference, providing a structured environment for model's inference speed testing.
 
 ## Usage
