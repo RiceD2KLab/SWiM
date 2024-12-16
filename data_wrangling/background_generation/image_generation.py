@@ -1,3 +1,18 @@
+"""
+This script generates images using the Stable Diffusion model from the Diffusers library.
+The script takes several command-line arguments to configure the image generation process:
+- `--height`: Height of the generated images (default: 1024).
+- `--width`: Width of the generated images (default: 1280).
+- `--num_prompts`: Number of images to generate per prompt (default: 350).
+- `--output_dir`: Directory to save generated images (default: 'generated_background_images').
+- `--prompts_file`: Path to the file containing prompts (default: 'prompts.txt').
+- `--seed`: Random seed for image generation (default: 42).S
+The script reads prompts from the specified file, generates images for each prompt using the Stable Diffusion model, and saves the images to the specified output directory.
+Usage:
+    python image_generation.py --height 1024 --width 1280 --num_prompts 350 --output_dir generated_background_images --prompts_file prompts.txt --seed 42
+
+"""
+
 import os
 import random
 import argparse
@@ -6,17 +21,52 @@ import torch
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description="Generate images using Stable Diffusion.")
-parser.add_argument("--height", type=int, default=1024, help="Height of the generated images (default: 1024)")
-parser.add_argument("--width", type=int, default=1280, help="Width of the generated images (default: 1280)")
-parser.add_argument("--num_prompts", type=int, default=350, help="Number of images to generate per prompt (default: 350)")
-parser.add_argument("--output_dir", type=str, default="generated_background_images", help="Directory to save generated images (default: 'generated_background_images')")
-parser.add_argument("--prompts_file", type=str, default="prompts.txt", help="Path to the file containing prompts (default: 'prompts.txt')")
-parser.add_argument("--seed", type=int, default=42, help="Random seed for image generation (default: 42)")
+parser.add_argument(
+    "--height",
+    type=int,
+    default=1024,
+    help="Height of the generated images (default: 1024)",
+)
+parser.add_argument(
+    "--width",
+    type=int,
+    default=1280,
+    help="Width of the generated images (default: 1280)",
+)
+parser.add_argument(
+    "--num_prompts",
+    type=int,
+    default=350,
+    help="Number of images to generate per prompt (default: 350)",
+)
+parser.add_argument(
+    "--output_dir",
+    type=str,
+    default="generated_background_images",
+    help="Directory to save generated images (default: 'generated_background_images')",
+)
+parser.add_argument(
+    "--prompts_file",
+    type=str,
+    default="prompts.txt",
+    help="Path to the file containing prompts (default: 'prompts.txt')",
+)
+parser.add_argument(
+    "--seed",
+    type=int,
+    default=42,
+    help="Random seed for image generation (default: 42)",
+)
 
 args = parser.parse_args()
 
 # Load the diffusion pipeline
-pipe = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16, use_safetensors=True, variant="fp16")
+pipe = DiffusionPipeline.from_pretrained(
+    "stabilityai/stable-diffusion-xl-base-1.0",
+    torch_dtype=torch.float16,
+    use_safetensors=True,
+    variant="fp16",
+)
 
 if torch.cuda.is_available():
     pipe = pipe.to("cuda")
@@ -41,23 +91,27 @@ random.seed(args.seed)
 # Generate images for each prompt and save them
 for i, prompt in enumerate(prompts):
     prompt = prompt.strip()  # Remove any leading/trailing whitespace/newlines
-    file_path = os.path.join(args.output_dir, f'prompt{i+1}')
+    file_path = os.path.join(args.output_dir, f"prompt{i+1}")
     os.makedirs(file_path, exist_ok=True)
-    
+
     if prompt:  # Ensure the prompt is not empty
         print(f"Generating images for prompt {i + 1}: {prompt}")
-        
+
         for j in range(n_prompt):  # Generate specified number of images per prompt
             seed = random.randint(0, 2**32 - 1)  # Generate a random seed for each image
             image_path = os.path.join(file_path, f"generated_image_{i + 1}_{j + 1}.png")
-            if os.path.exists(image_path): 
+            if os.path.exists(image_path):
                 continue
-            
-            image = pipe(prompt=prompt, height=height, width=width,
-                         num_inference_steps=50,
-                         generator=torch.manual_seed(seed)).images[0]
-            
-            # Save the generated image 
+
+            image = pipe(
+                prompt=prompt,
+                height=height,
+                width=width,
+                num_inference_steps=50,
+                generator=torch.manual_seed(seed),
+            ).images[0]
+
+            # Save the generated image
             image.save(image_path)
 
 print("Image generation complete.")
