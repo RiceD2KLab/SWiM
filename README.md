@@ -4,6 +4,12 @@
 ## Project Description
 This NASA - Rice University D2K Lab collaborative project aims to create a large spacecraft image dataset with segmentation masks along with benchmark performance for in-space inspection of spacecraft. The focus is to build a general-purpose instance segmentation model that can accurately segment spacecraft. We provide benchmark performance using You Only Look Once (YOLO)v8 nano and YOLO v11 nano models, optimized to run on resource-constrained hardware. The dataset and performance benchmark are expected to enhance NASA’s capability for autonomous inspections, improving spacecraft navigation, pose estimation, and structural analysis under various visual distortions in space imagery.
 
+## Model files and Datasets
+All the trained models can be found [here](https://drive.google.com/drive/folders/1WxbuNpZJu50HF27rXzarGAWMtwsZDdTc?usp=drive_link). Download the appropriate pt file and save it under `models/` directory.
+
+All the dataset versions can be found [here](https://drive.google.com/drive/folders/1-vd2KWqrl9Z3fpG7iS_r1L7bfjOlIzFt?usp=drive_link). Download the appropriate dataset, unzip it and save it under the `data/` folder.
+
+Information about each dataset version is given in the README attached with the dataset detailing the makeup of the data and the splits.
 
 ## Software dependencies
 [![Python 3.11+](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-311/) ![CUDA v12.1](https://img.shields.io/badge/CUDA-v12_1-violet)
@@ -77,13 +83,6 @@ Baseline model was trained on the following configuration:
 | **RAM**            | 16.0 GB                                            |
 
 Other versions of the model were done on the cloud GPU provider: [modal.com](https://modal.com/)
-
-## Model files and Datasets
-All the trained models can be found [here](https://drive.google.com/drive/folders/1WxbuNpZJu50HF27rXzarGAWMtwsZDdTc?usp=drive_link). Download the appropriate pt file and save it under `models/` directory.
-
-All the dataset versions can be found [here](https://drive.google.com/drive/folders/1-vd2KWqrl9Z3fpG7iS_r1L7bfjOlIzFt?usp=drive_link). Download the appropriate dataset, unzip it and save it under the `data/` folder.
-
-Information about each dataset version is given in the README attached with the dataset detailing the makeup of the data and the splits.
 
 ## Directory Structure
  ```sh
