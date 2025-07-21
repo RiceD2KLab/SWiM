@@ -151,7 +151,7 @@ To enable logging of validation results to Weights & Biases (WandB), you'll need
 
 ## License
 
-This project is licensed under the APACHE License. See the [LICENSE](../LICENSE) file for details.
+This project is licensed under the APACHE License. See the [LICENSE](LICENSE) file for details.
 
 
 
