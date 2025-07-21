@@ -7,7 +7,7 @@ This NASA - Rice University D2K Lab collaborative project aims to create a large
 ## Model files and Datasets
 All the trained models can be found [here](https://drive.google.com/drive/folders/1WxbuNpZJu50HF27rXzarGAWMtwsZDdTc?usp=drive_link). Download the appropriate pt file and save it under `models/` directory.
 
-All the dataset versions can be found [here](https://drive.google.com/drive/folders/1-vd2KWqrl9Z3fpG7iS_r1L7bfjOlIzFt?usp=drive_link). Download the appropriate dataset, unzip it and save it under the `data/` folder.
+All the dataset versions can be found [here](https://huggingface.co/datasets/JeffreyJsam/SWiM-SpacecraftWithMasks/tree/main). Download the appropriate dataset, unzip it and save it under the `data/` folder.
 
 Information about each dataset version is given in the README attached with the dataset detailing the makeup of the data and the splits.
 
