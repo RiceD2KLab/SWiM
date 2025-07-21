@@ -9,9 +9,9 @@ If you use our [dataset](https://huggingface.co/datasets/JeffreyJsam/SWiM-Spacec
 Jeffrey Joan Sam, Janhavi Sathe, Nikhil Chigali, Naman Gupta, Radhey Ruparel, Yicheng Jiang, Janmajay Singh, James W. Berck, and Arko Barman, "A New Dataset and Performance Benchmark for Real-time Spacecraft Segmentation in Onboard Flight Computers", arXiv preprint arXiv:2507.10775, 2025.
 
 ## Model files and Datasets
-All the trained models can be found [here](https://drive.google.com/drive/folders/1WxbuNpZJu50HF27rXzarGAWMtwsZDdTc?usp=drive_link). Download the appropriate pt file and save it under `models/` directory.
+All the trained models can be found [here](https://drive.google.com/drive/folders/1WxbuNpZJu50HF27rXzarGAWMtwsZDdTc?usp=drive_link). Download the appropriate pt file and save it under the `models/` directory.
 
-All the dataset versions can be found [here](https://huggingface.co/datasets/JeffreyJsam/SWiM-SpacecraftWithMasks). Download the appropriate dataset, unzip it and save it under the `data/` folder.
+All the dataset versions can be found [here](https://huggingface.co/datasets/JeffreyJsam/SWiM-SpacecraftWithMasks). Download it and save it under the `data/` directory.
 
 Information about each dataset version is given in the README attached with the dataset detailing the makeup of the data and the splits.
 
