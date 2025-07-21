@@ -4,7 +4,9 @@
 ## Project Description
 This NASA - Rice University D2K Lab collaborative project aims to create a large spacecraft image dataset with segmentation masks along with benchmark performance for in-space inspection of spacecraft. The focus is to build a general-purpose instance segmentation model that can accurately segment spacecraft. We provide benchmark performance using You Only Look Once (YOLO)v8 nano and YOLO v11 nano models, optimized to run on resource-constrained hardware. The dataset and performance benchmark are expected to enhance NASA’s capability for autonomous inspections, improving spacecraft navigation, pose estimation, and structural analysis under various visual distortions in space imagery.
 
-If you use our dataset or code, please cite our [paper](https://arxiv.org/abs/2507.10775).
+If you use our dataset or code, please cite our [paper](https://arxiv.org/abs/2507.10775):
+
+Jeffrey Joan Sam, Janhavi Sathe, Nikhil Chigali, Naman Gupta, Radhey Ruparel, Yicheng Jiang, Janmajay Singh, James W. Berck, and Arko Barman, "A New Dataset and Performance Benchmark for Real-time Spacecraft Segmentation in Onboard Flight Computers", arXiv preprint arXiv:2507.10775, 2025.
 
 ## Model files and Datasets
 All the trained models can be found [here](https://drive.google.com/drive/folders/1WxbuNpZJu50HF27rXzarGAWMtwsZDdTc?usp=drive_link). Download the appropriate pt file and save it under `models/` directory.
